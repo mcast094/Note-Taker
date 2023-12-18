@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require("fs");
 const PORT = process.env.PORT || 3001;
 const app = express();
-const dataBase = require('./db/db.json');
+let dataBase = require('./db/db.json');
 const path = require('path');
 // assigns Unique ID to new notes 
 const { v4: uuidv4 } = require('uuid');
@@ -30,9 +30,10 @@ app.post('/api/notes', (req, res) => {
 
 // Delete
 app.delete('/api/notes/:id', (req, res) => {
-    const newDataBase = dataBase.filter((note) => 
+     dataBase = dataBase.filter((note) => 
         note.id !== req.params.id);
-
+        fs.writeFileSync('./db/db.json', JSON.stringify(dataBase));
+        res.json(dataBase);
 });
 
 // html routes
